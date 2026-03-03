@@ -23,8 +23,9 @@ for i in range(50):
     points.append(Point(x, y))
 
 import geopandas as gpd
-
 bus_stops = gpd.GeoDataFrame(geometry=points, crs=ethiopia.crs)
+
+# Keep Only Points Inside Ethiopia
 bus_stops = bus_stops[bus_stops.within(ethiopia.geometry.iloc[0])]
 
 # Make Sure Everything Is Projected
@@ -36,12 +37,6 @@ buffers = bus_stops.buffer(50000)
 
 # Convert Buffers to GeoDataFrame
 buffer_gdf = gpd.GeoDataFrame(geometry=buffers, crs=bus_stops.crs)
-
-import geopandas as gpd
-bus_stops = gpd.GeoDataFrame(geometry=points, crs=ethiopia.crs)
-
-# Keep Only Points Inside Ethiopia
-bus_stops = bus_stops[bus_stops.within(ethiopia.geometry.iloc[0])]
 
 # Merge All Buffers Into One Service Area
 combined_buffer = buffer_gdf.geometry.union_all()
